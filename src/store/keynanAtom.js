@@ -36,11 +36,20 @@ export const decksAtom = atom({
 
 export const checkfetchDeckAtom = atom({
   key: "checkfetchDeckAtom",
-  default : false
-})
+  default: false,
+});
 
 export const activeDeckAtom = atom({
   key: "activeDeckAtom",
-  default: null
-})
+  default: null,
+});
 
+export const cardsAtom = atom({
+  key: "cardsAtom",
+  default: null,
+});
+
+export const newDeckAtom = atom({
+  key: "newDeckAtom",
+  default: false,
+});

@@ -54,83 +54,127 @@ const Card = () => {
 
   return (
     <>
-      <div
-        onClick={handleFlip}
-        className="relative w-full max-w-125 h-55 rounded-xl bg-[#292725] border border-[#45403B] mt-4 transition-all duration-200  hover:border-[#FF7139]"
-        style={{ transform: isFlipped ? "rotateY(180deg)" : "rotateY(0deg)" }}
-      >
-        {/* QUESTIONS HERE */}
-        <div
-          className={`absolute inset-0 flex h-full items-center justify-center text-center rounded-xl ${finished ? "invisible opacity-0" : "visible opacity-100"}`}
-        >
-          {!finished && !isFlipped && currentCard && (
-            <h2 className="text-xl font-bold text-[#F1D7B8]">
-              {currentCard.question}
-            </h2>
-          )}
+      <div className="w-[92%] max-w-2xl mx-auto mt-12 sm:mt-16">
+        <div className="flex justify-between text-sm sm:text-base text-[#858585] font-medium mb-4">
+          <span>Flashcards</span>
+          <span className="text-[#F5F5F5]">
+            {count}{" "}
+            <span className="text-[#666666]">of {data.cards.length}</span>
+          </span>
         </div>
 
-        {/* TRY AGAIN HERE */}
-        <div className="absolute inset-0 flex h-full flex-col items-center justify-center gap-3 rounded-xl">
-          {finished && (
-            <>
-              <h2 className="text-xl font-bold text-[#F1D7B8]">
-                Deck Completed
-              </h2>
-              <h4 className="text-sm text-[#D7B9A5]">Score: {calc}%</h4>
+        <div className="w-full h-1.5 bg-[#292929] rounded-full overflow-hidden mb-6">
+          <div
+            className="h-full bg-[#F5F5F5] rounded-full transition-all duration-300"
+            style={{
+              width: `${(count / data.cards.length) * 100}%`,
+            }}
+          />
+        </div>
+
+        <div
+          onClick={handleFlip}
+          className="relative w-full max-w-2xl h-64 sm:h-80 rounded-[24px] bg-[#0B0B0B] border border-[#292929] transition-all duration-300 hover:border-[#444444] cursor-pointer"
+          style={{ transform: isFlipped ? "rotateY(180deg)" : "rotateY(0deg)" }}
+        >
+          <div
+            className={`absolute inset-0 flex h-full items-center justify-center text-center rounded-[24px] px-6 sm:px-12 ${
+              finished ? "invisible opacity-0" : "visible opacity-100"
+            }`}
+          >
+            {!finished && !isFlipped && currentCard && (
+              <div className="flex flex-col items-center">
+                <span className="text-xs uppercase tracking-[0.2em] text-[#666666] mb-7">
+                  Question {count}
+                </span>
+                <h2 className="text-xl sm:text-3xl font-semibold tracking-tight text-[#F5F5F5] leading-relaxed">
+                  {currentCard.question}
+                </h2>
+                <p className="absolute bottom-6 text-xs text-[#666666]">
+                  Click anywhere to reveal answer
+                </p>
+              </div>
+            )}
+          </div>
+          <div className="absolute inset-0 flex h-full flex-col items-center justify-center gap-4 rounded-[24px]">
+            {finished && (
+              <>
+                <span className="text-xs uppercase tracking-[0.2em] text-[#888888]">
+                  Session completed
+                </span>
+                <h2 className="text-4xl sm:text-5xl font-bold tracking-tight text-[#F5F5F5]">
+                  {calc}%
+                </h2>
+                <h4 className="text-sm text-[#888888]">Your recall accuracy</h4>
+                <div className="flex gap-6 text-sm text-[#858585]">
+                  <span>
+                    Mastered: <span className="text-white">{mastered}</span>
+                  </span>
+                  <span>
+                    Review: <span className="text-white">{review}</span>
+                  </span>
+                </div>
+                <button
+                  className="bg-[#F5F5F5] hover:bg-[#D4D4D8] text-black px-7 py-3 rounded-full text-sm font-medium transition-colors duration-200"
+                  onClick={handleReset}
+                >
+                  Try Again
+                </button>
+              </>
+            )}
+          </div>
+          <div
+            className={`absolute inset-0 flex h-full items-center justify-center text-center rounded-[24px] px-6 sm:px-12 ${
+              isFlipped ? "visible opacity-100" : "invisible opacity-0"
+            } ${finished ? "invisible opacity-0" : "visible opacity-100"}`}
+            style={{ transform: "rotateY(180deg)" }}
+          >
+            {!finished && isFlipped && currentCard && (
+              <div className="flex flex-col items-center">
+                <span className="text-xs uppercase tracking-[0.2em] text-[#666666] mb-7">
+                  Answer
+                </span>
+                <h2 className="text-xl sm:text-3xl font-semibold text-[#F5F5F5] leading-relaxed">
+                  {currentCard.answer}
+                </h2>
+                <h3 className="text-sm sm:text-base text-[#888888] mt-5 leading-relaxed">
+                  {currentCard.description}
+                </h3>
+              </div>
+            )}
+          </div>
+        </div>
+
+        {!finished && (
+          <div className="flex flex-col mt-7">
+            <p className="text-center text-xs text-[#666666] mb-4">
+              How well did you remember?
+            </p>
+
+            <div className="grid grid-cols-2 gap-3">
               <button
-                className="bg-[#C76543] hover:bg-[#E07838] text-[#FFF1E8] px-5 py-3 rounded-xl transition-colors duration-200"
-                onClick={handleReset}
+                className="border border-[#333333] bg-[#111111] hover:bg-[#222222] text-[#AAAAAA] hover:text-white px-5 py-3.5 rounded-full text-sm font-medium transition-all duration-200"
+                onClick={handleIncorrect}
               >
-                Try Again
+                Still Learning
               </button>
-            </>
-          )}
-        </div>
-
-        {/* ANSWER HERE */}
-        <div
-          className={`absolute inset-0 flex h-full items-center justify-center text-center rounded-xl ${isFlipped ? "visible opacity-100" : "invisible opacity-0"} ${finished ? "invisible opacity-0" : "visible opacity-100"}`}
-          style={{ transform: "rotateY(180deg)" }}
-        >
-          {!finished && isFlipped && currentCard && (
-            <div className="flex flex-col">
-              <h2 className="text-xl font-bold text-[#FF895B]">
-                {currentCard.answer}
-              </h2>
-              <h3 className="text-sm text-[#D7B9A5]">
-                {currentCard.description}
-              </h3>
+              <button
+                className="bg-[#F5F5F5] hover:bg-[#D4D4D8] text-black px-5 py-3.5 rounded-full text-sm font-medium transition-all duration-200"
+                onClick={handleCorrect}
+              >
+                Got It
+              </button>
             </div>
-          )}
-        </div>
-      </div>
 
-      {!finished && (
-        <div className="flex flex-col">
-          <div className="flex gap-3 mt-6">
             <button
-              className="w-48 bg-[#A94F30] hover:bg-[#C76543] text-[#FFF1E8] px-5 py-3 rounded-xl"
-              onClick={handleIncorrect}
+              className="text-[#666666] hover:text-white mt-5 text-xs transition-colors duration-200"
+              onClick={handleReset}
             >
-              Still Learning
-            </button>
-            <button
-              className="w-48 bg-[#356B4B] hover:bg-[#44875E] text-[#F0F7F1] px-5 py-3 rounded-xl"
-              onClick={handleCorrect}
-            >
-              Got It
+              Reset session
             </button>
           </div>
-
-          <button
-            className="bg-[#45403B] hover:bg-[#5A5149] text-[#F1D7B8] mt-3 rounded-xl px-6 py-3"
-            onClick={handleReset}
-          >
-            Reset
-          </button>
-        </div>
-      )}
+        )}
+      </div>
     </>
   );
 };
